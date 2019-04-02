@@ -4,6 +4,7 @@ provider "aws" {
 
 locals {
   path_to_generated_aws_properties = "${var.path_in_consul}/${data.consul_keys.app.var.path_to_generated_aws_properties}"
+  no_instances = 2
 
   region = "${data.consul_keys.app.var.region}"
   ami = "${data.consul_keys.app.var.ami}"
@@ -18,7 +19,7 @@ locals {
 resource "aws_instance" "test_instance" {
   depends_on = ["aws_security_group.sg_spark_terraform"]
 
-  count = "1" #"${local.no_instances}"
+  count = "${local.no_instances}"
   ami = "${local.ami}"
   instance_type = "${local.instance_type}"
   subnet_id = "${local.subnet_id}"

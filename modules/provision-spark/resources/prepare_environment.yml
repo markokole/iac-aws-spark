@@ -1,0 +1,67 @@
+---
+- hosts: spark-*
+  vars:
+    spark_url: "http://apache.uib.no/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz"
+    spark_dir:  "/usr/spark/"
+    spark_home: "spark-2.4.0-bin-hadoop2.7"
+  tasks:
+    - name: Create group spark
+      group:
+        name: spark
+        state: present
+      become: yes
+
+    - name: Create user spark
+      user:
+        name: spark
+        group: spark
+      become: yes
+
+    - name: Install a list of packages
+      yum:
+        name:
+          - bzip2
+          - wget
+          - java-1.8.0-openjdk-devel
+        state: present
+      become: yes
+
+    - name: Download Apache Spark
+      get_url:
+        url: "{{ spark_url }}"
+        dest: /tmp
+
+    - name: Create Spark directory
+      file:
+        path: "{{ spark_dir }}"
+        state: directory
+      become: yes
+
+    - name: Extract spark-2.4.0-bin-hadoop2.7.tgz into /usr/spark
+      unarchive:
+        src: /tmp/spark-2.4.0-bin-hadoop2.7.tgz
+        dest: "{{ spark_dir }}"
+        remote_src: yes
+      become: yes
+
+    - name: Change ownership of Spark home
+      file:
+        path: "{{ spark_dir }}"
+        owner: spark
+        group: spark
+        state: directory
+        recurse: yes
+      become: yes
+
+    - name: Create file with environment variables
+      command: sh -c "echo export {{ item }} >> /etc/profile.d/ansible.sh"
+      with_items:
+      - SPARK_HOME={{ spark_dir }}{{ spark_home }}
+      - PATH=/usr/anaconda/bin:$PATH
+      - JAVA_HOME=/usr/lib/jvm/java-1.8.0
+      become: yes
+
+    - name: Create spark-env.sh
+      command: sh -c "echo SPARK_MASTER_HOST={{ spark_master_host }} >> {{ spark_dir }}{{ spark_home }}/conf/spark-env.sh"
+      become: yes
+      become_user: spark
