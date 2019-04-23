@@ -30,18 +30,9 @@ data "consul_keys" "app" {
     path    = "${var.path_in_consul}/path_to_generated_aws_properties"
   }
   key {
-    name    = "ami"
-    path    = "${var.path_in_consul}/ami_id"
-  }
-  key {
     name    = "cidr_blocks"
     path    = "${var.path_in_consul}/route_table_cidr_block_all"
   }
-  key {
-    name    = "instance_type"
-    path    = "${var.path_in_consul_spark}/${var.cluster_type}/instance_type"
-  }
-
 }
 
 data "consul_keys" "aws" {
@@ -61,5 +52,31 @@ data "consul_keys" "aws" {
   key {
     name    = "subnet_id"
     path    = "${local.path_to_generated_aws_properties}/subnet_id"
+  }
+}
+
+data "consul_keys" "spark" {
+  key {
+    name    = "ami"
+    path    = "${var.path_in_consul_spark}/${var.cluster_type}/ami"
+  }
+  key {
+    name    = "no_workers"
+    path    = "${var.path_in_consul_spark}/${var.cluster_type}/no_workers"
+  }
+
+  key {
+    name    = "instance_type_master"
+    path    = "${var.path_in_consul_spark}/${var.cluster_type}/instance_type_master"
+  }
+
+  key {
+    name    = "instance_type_worker"
+    path    = "${var.path_in_consul_spark}/${var.cluster_type}/instance_type_worker"
+  }
+
+  key {
+    name    = "instance_tag"
+    path    = "${var.path_in_consul_spark}/${var.cluster_type}/instance_tag"
   }
 }

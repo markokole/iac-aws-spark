@@ -20,10 +20,19 @@ resource "aws_security_group" "sg_spark_terraform" {
     description = "ssh"
   }
 
-  # spark master
+  # spark master UI
   ingress {
     from_port   = 8080
     to_port     = 8080
+    protocol    = "tcp"
+    cidr_blocks = ["${local.cidr_blocks}"]
+    description = "spark master"
+  }
+
+  # spark worker UI
+  ingress {
+    from_port   = 8081
+    to_port     = 8081
     protocol    = "tcp"
     cidr_blocks = ["${local.cidr_blocks}"]
     description = "spark master"
