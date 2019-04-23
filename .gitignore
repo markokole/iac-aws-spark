@@ -8,3 +8,4 @@ output
 *.log
 aws_cred.env
 id_rsa
+s3.properties
