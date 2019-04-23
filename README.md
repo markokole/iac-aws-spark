@@ -1,9 +1,9 @@
 # Apache Spark on AWS
-*Philosophy:* Write your code on your local machine, scale it out in the cloud when you want to use the whole dataset or run 10.000.000 epochs in your Neural Network. The cluster is created, data processed and stored, and the cluster is destroyed. Minimal cost, maximal usage.
+**Philosophy:** Write your code on your local machine, scale it out in the cloud when you want to use the whole dataset or run 10.000.000 epochs in your Neural Network. The cluster is created, data processed and stored, and the cluster is destroyed. Minimal cost, maximal usage.
 
-Spark cluster is provisioned using Hashistack - Terraform and Consul - and Ansible. The cluster is provisioned on AWS, work environment is Docker on Windows which is build in another repository mentioned below.
+**Spark** cluster is provisioned using **Hashistack** - **Terraform** and **Consul** - and Ansible. The cluster is provisioned on **AWS**, work environment is **Docker** on Windows which is build in another repository mentioned below.
 
-The idea is to automate the Spark cluster provision, clone and run the code from Github and use data from an external source (for example S3). Once the data processing is done, results are saved to an external storage, the cluster is destroyed.
+The idea is to automate the Spark cluster provision, clone and run the code from **Github** and use data from an external source (for example S3). Once the data processing is done, results are saved to an external storage, the cluster is destroyed.
 
 ## Dependencies
 - AWS credentials are needed. This is described in the [VPC on AWS](#VPC on AWS) section.
