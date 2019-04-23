@@ -1,0 +1,21 @@
+---
+- hosts: spark-master
+  vars:
+    spark_home: "{{ spark_dir }}{{ spark_version }}"
+    spark_master_host_string: "spark://{{ spark_master_host }}:7077"
+    s3_properties: "s3.properties"
+  tasks:
+
+    - name: "copy {{ s3_properties }} file"
+      copy:
+        src: /local-git/spark-on-aws/modules/provision-spark/resources/execute_on_spark/{{ s3_properties }}
+        dest: /home/centos/{{ s3_properties }}
+        owner: centos
+        group: centos
+
+    - git:
+        repo: "{{ git_repo }}"
+        dest: "{{ git_dest }}"
+
+    - name: "{{ spark_job_name }}"
+      command: sh {{ spark_home }}/bin/spark-submit --master {{ spark_master_host_string }} --properties-file {{ s3_properties }} {{ git_dest }}/{{ exec_path }} {{ spark_job_args }}

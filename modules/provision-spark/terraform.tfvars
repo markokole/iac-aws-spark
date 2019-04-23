@@ -1,1 +1,2 @@
-cluster_type = "single"
+#cluster_type = "log-reg-iris"
+cluster_type = "log-reg-santander"

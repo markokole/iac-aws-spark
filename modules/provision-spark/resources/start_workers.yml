@@ -1,0 +1,15 @@
+---
+- hosts: spark-worker
+  vars:
+    spark_home: "{{ spark_dir }}{{ spark_version }}"
+  tasks:
+    - name: "Connect workers to master {{ spark_master_host }}:7077"
+      command: sh {{ spark_home }}/sbin/start-slave.sh spark://{{ spark_master_host }}:7077
+      become: yes
+      become_user: spark
+
+    - name: "Connect workers to master {{ spark_master_host }}:7077 - Second Attempt"
+      command: sh {{ spark_home }}/sbin/start-slave.sh spark://{{ spark_master_host }}:7077
+      become: yes
+      become_user: spark
+      ignore_errors: yes
