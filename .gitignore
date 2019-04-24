@@ -9,3 +9,4 @@ output
 aws_cred.env
 id_rsa
 s3.properties
+*pptx
