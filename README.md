@@ -9,12 +9,12 @@ The idea is to automate the Spark cluster provision, clone and run the code from
 
 ![alt text](https://github.com/markokole/spark-on-aws/blob/master/files/iac.JPG "Infrastructure as Code")
 
-1. The **Virtual Private Cloud** is provisioned using **Terraform**. VPC's parameters are stored in Consul. This is a long live provision and serves multiple cluster provisions
+1. The **Virtual Private Cloud** is provisioned using **Terraform**. VPC's parameters are stored in Consul. This is a long live provision and serves multiple cluster provisions.
 2. Data is loaded into S3. This is optional, depending on the data storage solution. Hadoop/Hive on top of S3 is also an option.
 3. Code to be run in Spark is put in a repository in GitHub.
-4. Cluster provisioning creates the cluster, clones the repository, runs the code which points to the data storage (S3 bucket for example)
-5. Data is processed and results are saved to an external storage (S3)
-6. The cluster is destroyed after the processing is done
+4. Cluster provisioning creates the cluster, clones the repository, runs the code which points to the data storage (S3 bucket for example).
+5. Data is processed and results are saved to an external storage (S3).
+6. The cluster is destroyed after the processing is done.
 
 
 ## Dependencies
@@ -29,8 +29,14 @@ The documentation in that project will help you create the Docker container and 
 ### Configuration to Consul
 The provisioning of the cluster uses Consul to fetch the parameters for provisioned cluster. *Externalization of parameters is still work in progress*. The [configuration project](https://github.com/markokole/aws-terraform-hdp-config) holds *yaml* files used for feeding Consul which Terraform scripts use to get parameters from.
 
+The YAML file for the Spark cluster configuration is the [spark.yml](https://github.com/markokole/aws-terraform-hdp-config/blob/master/spark.yml). The *ami* is a pre-build image with Spark installed to minimize the time at provision. Spark 2.4.0 is used. It is possible to chose instance of master and workers and number of workers in a cluster.
+The GitHub repository has to be defined, with the destination at the client (which is the master). *If you plan to do some demanding work locally (for example with pandas) choose an instance with more resources.*
+The arguments taken by the python script are a semi-colon separated script which the user should parse in the code. The execution file must be written with the path where *git_dest* is HOME to the project.
+
 ### Data Science examples
 This [project](https://github.com/markokole/ds-code-for-ias) holds some **pyspark** examples to show the automatization - the provisioning process, once **Spark** cluster is established, clones the GitHub repository and runs the code. Input datasets are in S3 and are given as input parameters to the **pyspark** script.
+
+
 
 ## Generalization
 Even though this repository focuses on Apache Spark, the idea stays the same for any other service or cluster that needs to be automized. Instead of short-lived Spark cluster, a [Hadoop cluster can be provisioned](https://github.com/markokole/hdp-on-aws), or just an R-server with huge resources to do the job.
