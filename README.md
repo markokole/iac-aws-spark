@@ -33,4 +33,4 @@ The provisioning of the cluster uses Consul to fetch the parameters for provisio
 This [project](https://github.com/markokole/ds-code-for-ias) holds some **pyspark** examples to show the automatization - the provisioning process, once **Spark** cluster is established, clones the GitHub repository and runs the code. Input datasets are in S3 and are given as input parameters to the **pyspark** script.
 
 ## Generalization
-Even though this repository focuses on Apache Spark, the idea stays the same for any other service or cluster that needs to be automized. Instead of short-lived Spark cluster, a [Hadoop cluster can be provisioned](https://github.com/markokole/hadoop3-on-aws), or just an R-server with huge resources to do the job.
+Even though this repository focuses on Apache Spark, the idea stays the same for any other service or cluster that needs to be automized. Instead of short-lived Spark cluster, a [Hadoop cluster can be provisioned](https://github.com/markokole/hdp-on-aws), or just an R-server with huge resources to do the job.
