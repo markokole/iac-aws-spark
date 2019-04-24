@@ -7,7 +7,7 @@ What is [Apache Spark?](https://spark.apache.org/)
 
 The idea is to automate the Spark cluster provision, clone and run the code from **GitHub** and use data from an external source (for example S3). Once the data processing is done, results are saved to an external storage, the cluster is destroyed.
 
-![alt text](https://github.com/markokole/spark-on-aws/blob/master/docs/iac.JPG "Infrastructure as Code")
+![alt text](https://github.com/markokole/spark-on-aws/blob/master/files/iac.JPG "Infrastructure as Code")
 
 1. The **Virtual Private Cloud** is provisioned using **Terraform**. VPC's parameters are stored in Consul. This is a long live provision and serves multiple cluster provisions
 2. Data is loaded into S3. This is optional, depending on the data storage solution. Hadoop/Hive on top of S3 is also an option.
