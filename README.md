@@ -7,7 +7,7 @@ What is [Apache Spark?](https://spark.apache.org/)
 
 The idea is to automate the Spark cluster provision, clone and run the code from **GitHub** and use data from an external source (for example S3). Once the data processing is done, results are saved to an external storage, the cluster is destroyed.
 
-![alt text](https://github.com/markokole/spark-on-aws/blob/master/files/iac.JPG "Infrastructure as Code")
+![alt text](https://github.com/markokole/iac-aws-spark/blob/master/files/iac.JPG "Infrastructure as Code")
 
 1. The **Virtual Private Cloud** is provisioned using **Terraform**. VPC's parameters are stored in Consul. This is a long live provision and serves multiple cluster provisions.
 2. Data is loaded into S3. This is optional, depending on the data storage solution. Hadoop/Hive on top of S3 is also an option.
@@ -16,20 +16,19 @@ The idea is to automate the Spark cluster provision, clone and run the code from
 5. Data is processed and results are saved to an external storage (S3).
 6. The cluster is destroyed after the processing is done.
 
-
 ## Dependencies
 - AWS credentials are needed. This is described in the [VPC on AWS](#VPC on AWS) section.
 - This project depends on two other GitHub projects and a third one is used as example.
 - YAML files are used to feed the Consul server which Terraform scripts read values from.
 
 ### VPC on AWS
-The GitHub project [Provision VPC on AWS](https://github.com/markokole/aws-with-terraform) sets up the **Virtual Private Cloud** in AWS. One can first build a **Docker** container on Windows to prepare the development environment and local Consul server where the configuration parameters are stored.
+The GitHub project [Provision VPC on AWS](https://github.com/markokole/iac-aws-vpc) sets up the **Virtual Private Cloud** in AWS. One can first build a **Docker** container on Windows to prepare the development environment and local Consul server where the configuration parameters are stored.
 The documentation in that project will help you create the Docker container and prepare the development environment.
 
 ### Configuration to Consul
-The provisioning of the cluster uses Consul to fetch the parameters for provisioned cluster. *Externalization of parameters is still work in progress*. The [configuration project](https://github.com/markokole/aws-terraform-hdp-config) holds *yaml* files used for feeding Consul which Terraform scripts use to get parameters from.
+The provisioning of the cluster uses Consul to fetch the parameters for provisioned cluster. *Externalization of parameters is still work in progress*. The [configuration project](https://github.com/markokole/iac-consul-config) holds *yaml* files used for feeding Consul which Terraform scripts use to get parameters from.
 
-The YAML file for the Spark cluster configuration is the [spark.yml](https://github.com/markokole/aws-terraform-hdp-config/blob/master/spark.yml). The *ami* is a pre-build image with Spark installed to minimize the time at provision. Spark 2.4.0 is used. It is possible to chose instance of master and workers and number of workers in a cluster.
+The YAML file for the Spark cluster configuration is the [spark.yml](https://github.com/markokole/iac-consul-config/blob/master/spark.yml). The *ami* is a pre-build image with Spark installed to minimize the time at provision. Spark 2.4.0 is used. It is possible to chose instance of master and workers and number of workers in a cluster.
 The GitHub repository has to be defined, with the destination at the client (which is the master). *If you plan to do some demanding work locally (for example with pandas) choose an instance with more resources.*
 The arguments taken by the python script are a semi-colon separated script which the user should parse in the code. The execution file must be written with the path where *git_dest* is HOME to the project.
 

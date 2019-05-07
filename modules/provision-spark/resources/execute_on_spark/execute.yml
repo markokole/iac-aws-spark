@@ -8,7 +8,7 @@
 
     - name: "copy {{ s3_properties }} file"
       copy:
-        src: /local-git/spark-on-aws/modules/provision-spark/resources/execute_on_spark/{{ s3_properties }}
+        src: /local-git/iac-aws-spark/modules/provision-spark/resources/execute_on_spark/{{ s3_properties }}
         dest: /home/centos/{{ s3_properties }}
         owner: centos
         group: centos
