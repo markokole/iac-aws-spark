@@ -6,6 +6,8 @@ module "provision_spark" {
 locals {
   workdir                = "${path.cwd}/output"
 
+
+
   spark_master_name      = "${module.provision_spark.master_private_dns}"
   spark_master_host      = "${module.provision_spark.master_public_ip}"
   spark_worker_name      = "${module.provision_spark.worker_private_dns}"
@@ -19,10 +21,14 @@ locals {
   spark_job_name         = "${data.consul_keys.spark.var.spark_job_name}"
   git_repo               = "${data.consul_keys.spark.var.git_repo}"
   git_dest               = "${data.consul_keys.spark.var.git_dest}"
+  class_name             = "${data.consul_keys.spark.var.class_name}"
 
   spark_url              = "https://archive.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz"
   spark_dir              =  "/usr/spark/"
   spark_version          = "spark-2.4.0-bin-hadoop2.7"
+
+  access_key             = "${data.consul_keys.app.var.access_key}"
+  secret_access_key      = "${data.consul_keys.app.var.secret_access_key}"
 }
 
 resource "null_resource" "prepare_environment" {
@@ -58,9 +64,10 @@ ansible-playbook --inventory=${local.workdir}/ansible-hosts \
                  --extra-vars spark_master_host=${local.spark_master_name} \
                  --extra-vars spark_url=${local.spark_url} \
                  --extra-vars spark_dir=${local.spark_dir} \
-                 --extra-vars spark_version=${local.spark_version}
+                 --extra-vars spark_version=${local.spark_version} \
+                 --extra-vars access_key=${local.access_key} \
+                 --extra-vars secret_access_key=${local.secret_access_key}
 EOF
-#--extra-vars @resources/vars.yml \
   }
 }
 
@@ -80,7 +87,7 @@ EOF
   }
 }
 
-resource "null_resource" "run_python_code" {
+resource "null_resource" "execute_application" {
   depends_on = ["null_resource.start_workers"]
 
   provisioner "local-exec" {
@@ -99,14 +106,15 @@ EOF
   provisioner "local-exec" {
     command = <<EOF
 export ANSIBLE_HOST_KEY_CHECKING=False; \
-ansible-playbook --inventory=${local.workdir}/ansible-hosts \
-                 ${path.module}/resources/execute_on_spark/execute.yml \
+ansible-playbook --inventory=/local-git/iac-aws-spark/modules/provision-spark/output/ansible-hosts \
+                 /local-git/iac-aws-spark/modules/provision-spark/resources/execute_on_spark/execute.yml \
                  --extra-vars spark_master_host=${local.spark_master_name} \
                  --extra-vars exec_path=${local.exec_path} \
                  --extra-vars spark_job_args="${local.spark_job_args}" \
                  --extra-vars spark_job_name="${local.spark_job_name}" \
                  --extra-vars git_repo=${local.git_repo} \
                  --extra-vars git_dest=${local.git_dest} \
+                 --extra-vars class_name=${local.class_name} \
                  --extra-vars spark_url=${local.spark_url} \
                  --extra-vars spark_dir=${local.spark_dir} \
                  --extra-vars spark_version=${local.spark_version}

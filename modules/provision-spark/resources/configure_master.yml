@@ -11,6 +11,9 @@
         - spark.eventLog.dir file:///var/log/spark/apps
         - spark.eventLog.enabled true
         - "spark.master spark://{{ spark_master_host }}:7077"
+        - spark.hadoop.fs.s3a.impl org.apache.hadoop.fs.s3native.NativeS3FileSystem
+        - "spark.hadoop.fs.s3a.awsAccessKeyId {{ access_key }}"
+        - "spark.hadoop.fs.s3a.awsSecretAccessKey {{ secret_access_key }}"
       become: yes
       become_user: spark
 

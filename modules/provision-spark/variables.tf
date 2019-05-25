@@ -1,5 +1,9 @@
 variable "cluster_type" {}
 
+variable "path_in_consul" {
+  default   = "test/master/aws"
+}
+
 variable "path_in_consul_spark" {
   default   = "test/master/spark"
 }
@@ -14,6 +18,20 @@ variable "consul_port" {
 
 variable "datacenter" {
   default   = "dc1"
+}
+
+data "consul_keys" "app" {
+  key {
+    name    = "access_key"
+    path    = "${var.path_in_consul}/access_key"
+    default = ""
+  }
+
+  key {
+    name    = "secret_access_key"
+    path    = "${var.path_in_consul}/secret_access_key"
+    default = ""
+  }
 }
 
 data "consul_keys" "spark" {
@@ -41,4 +59,10 @@ data "consul_keys" "spark" {
     name    = "git_dest"
     path    = "${var.path_in_consul_spark}/${var.cluster_type}/git_dest"
   }
+  key {
+    name    = "class_name"
+    path    = "${var.path_in_consul_spark}/${var.cluster_type}/class_name"
+    default = ""
+  }
+
 }
