@@ -38,7 +38,7 @@ resource "aws_instance" "spark_master" {
   subnet_id = "${local.subnet_id}"
   security_groups = ["${local.security_groups}"]
   availability_zone = "${local.availability_zone}"
-  key_name = "mykeypair"
+  key_name = "${local.key_pair}"
   associate_public_ip_address = "true"
   tags {
     Name = "spark-master-${local.instance_tag}"
@@ -63,7 +63,7 @@ resource "aws_instance" "spark_worker" {
   subnet_id = "${local.subnet_id}"
   security_groups = ["${local.security_groups}"]
   availability_zone = "${local.availability_zone}"
-  key_name = "mykeypair"
+  key_name = "${local.key_pair}"
   associate_public_ip_address = "true"
   tags {
     Name = "spark-worker-${local.instance_tag}-${format("%02d", count.index + 1)}"
