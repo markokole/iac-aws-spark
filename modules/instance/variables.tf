@@ -53,6 +53,10 @@ data "consul_keys" "aws" {
     name    = "subnet_id"
     path    = "${local.path_to_generated_aws_properties}/subnet_id"
   }
+  key {
+    name    = "key_pair"
+    path    = "${local.path_to_generated_aws_properties}/key_pair"
+  }
 }
 
 data "consul_keys" "spark" {

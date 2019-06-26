@@ -13,15 +13,17 @@ locals {
   vpc_id               = "${data.consul_keys.aws.var.vpc_id}"
   subnet_id            = "${data.consul_keys.aws.var.subnet_id}"
   availability_zone    = "${data.consul_keys.aws.var.availability_zone}"
+  key_pair             = "${data.consul_keys.aws.var.key_pair}"
 
   # spark
-  #ami                  = "ami-0eb0892f46a18e1de" 
+  #ami                  = "ami-0eb0892f46a18e1de"
   ami                  = "${data.consul_keys.spark.var.ami}"
   no_workers           = "${data.consul_keys.spark.var.no_workers}" # number of workers in the cluster
   no_instances         = "${local.no_workers + 1}" # number of all nodes in the cluster
   instance_type_master = "${data.consul_keys.spark.var.instance_type_master}"
   instance_type_worker = "${data.consul_keys.spark.var.instance_type_worker}"
   instance_tag         = "${data.consul_keys.spark.var.instance_tag}"
+
 
   security_groups      = ["${aws_security_group.sg_spark_terraform.id}"]
 
