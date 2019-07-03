@@ -40,7 +40,6 @@ data "consul_keys" "aws" {
     name    = "vpc_id"
     path    = "${local.path_to_generated_aws_properties}/vpc_id"
   }
-
   key {
     name    = "security_group"
     path    = "${local.path_to_generated_aws_properties}/default_security_group_id"
@@ -55,7 +54,7 @@ data "consul_keys" "aws" {
   }
   key {
     name    = "key_pair"
-    path    = "${local.path_to_generated_aws_properties}/key_pair"
+    path    = "${var.path_in_consul}/key_pair"
   }
 }
 

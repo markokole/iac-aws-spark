@@ -24,7 +24,6 @@ locals {
   instance_type_worker = "${data.consul_keys.spark.var.instance_type_worker}"
   instance_tag         = "${data.consul_keys.spark.var.instance_tag}"
 
-
   security_groups      = ["${aws_security_group.sg_spark_terraform.id}"]
 
 }
