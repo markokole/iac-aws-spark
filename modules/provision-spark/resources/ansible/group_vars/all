@@ -1,0 +1,11 @@
+---
+java:
+  yum_package: "java-1.8.0-openjdk"
+  java_home: "/usr"
+
+spark:
+  url: "http://apache.uib.no/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz"
+  landing_zone: "/opt"
+  archived_file: "spark-2.4.3-bin-hadoop2.7.tgz"
+  spark_home: "spark-2.4.3-bin-hadoop2.7"
+  apps_log_path: "/var/log/spark/apps"

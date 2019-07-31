@@ -1,0 +1,16 @@
+- name: Start Spark Master
+  template:
+    src: spark-worker.service.j2
+    dest: /etc/systemd/system/spark-worker.service
+    mode: 755
+    force: yes
+
+- name: Force systemd to reread configs
+  systemd: 
+    daemon_reload: yes
+
+- name: Start Spark Worker
+  systemd: 
+    name: spark-worker
+    state: restarted 
+    enabled: yes

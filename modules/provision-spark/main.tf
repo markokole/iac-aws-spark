@@ -31,12 +31,12 @@ locals {
   secret_access_key      = "${data.consul_keys.app.var.secret_access_key}"
 }
 
-resource "null_resource" "prepare_environment" {
+resource "null_resource" "install_spark" {
   depends_on = ["module.provision_spark"]
 
   provisioner "local-exec" {
     command = <<EOF
-      sleep 30
+      sleep 20
 EOF
   }
 
@@ -44,80 +44,9 @@ EOF
     command = <<EOF
 export ANSIBLE_HOST_KEY_CHECKING=False; \
 ansible-playbook --inventory=${local.workdir}/ansible-hosts \
-                 ${path.module}/resources/prepare_environment.yml \
-                 --extra-vars spark_master_host=${local.spark_master_name} \
-                 --extra-vars spark_url=${local.spark_url} \
-                 --extra-vars spark_dir=${local.spark_dir} \
-                 --extra-vars spark_version=${local.spark_version}
-EOF
-  }
-}
-
-resource "null_resource" "configure_start_history_server" {
-  depends_on = ["null_resource.prepare_environment"]
-
-  provisioner "local-exec" {
-    command = <<EOF
-export ANSIBLE_HOST_KEY_CHECKING=False; \
-ansible-playbook --inventory=${local.workdir}/ansible-hosts \
-                 ${path.module}/resources/configure_master.yml \
-                 --extra-vars spark_master_host=${local.spark_master_name} \
-                 --extra-vars spark_url=${local.spark_url} \
-                 --extra-vars spark_dir=${local.spark_dir} \
-                 --extra-vars spark_version=${local.spark_version} \
-                 --extra-vars access_key=${local.access_key} \
-                 --extra-vars secret_access_key=${local.secret_access_key}
-EOF
-  }
-}
-
-resource "null_resource" "start_workers" {
-  depends_on = ["null_resource.configure_start_history_server"]
-
-  provisioner "local-exec" {
-    command = <<EOF
-export ANSIBLE_HOST_KEY_CHECKING=False; \
-ansible-playbook --inventory=${local.workdir}/ansible-hosts \
-                 ${path.module}/resources/start_workers.yml \
-                 --extra-vars spark_master_host=${local.spark_master_name} \
-                 --extra-vars spark_url=${local.spark_url} \
-                 --extra-vars spark_dir=${local.spark_dir} \
-                 --extra-vars spark_version=${local.spark_version}
-EOF
-  }
-}
-
-resource "null_resource" "execute_application" {
-  depends_on = ["null_resource.start_workers"]
-
-  provisioner "local-exec" {
-    command = <<EOF
-      echo "SPARK HISTORY SERVER:"
-      echo "${module.provision_spark.spark_history_server}"
-
-      echo "SPARK MASTER:"
-      echo "${module.provision_spark.spark_master}"
-
-      echo "Spark job name"
-      echo "${local.spark_job_name}"
-EOF
-  }
-
-  provisioner "local-exec" {
-    command = <<EOF
-export ANSIBLE_HOST_KEY_CHECKING=False; \
-ansible-playbook --inventory=/local-git/iac-aws-spark/modules/provision-spark/output/ansible-hosts \
-                 /local-git/iac-aws-spark/modules/provision-spark/resources/execute_on_spark/execute.yml \
-                 --extra-vars spark_master_host=${local.spark_master_name} \
-                 --extra-vars exec_path=${local.exec_path} \
-                 --extra-vars spark_job_args="${local.spark_job_args}" \
-                 --extra-vars spark_job_name="${local.spark_job_name}" \
-                 --extra-vars git_repo=${local.git_repo} \
-                 --extra-vars git_dest=${local.git_dest} \
-                 --extra-vars class_name=${local.class_name} \
-                 --extra-vars spark_url=${local.spark_url} \
-                 --extra-vars spark_dir=${local.spark_dir} \
-                 --extra-vars spark_version=${local.spark_version}
+                 ${path.module}/resources/ansible/spark.yml \
+                 --extra-vars local_workdir=${local.workdir} \
+                 --extra-vars spark_master_name=${local.spark_master_name}
 EOF
   }
 }

@@ -1,0 +1,55 @@
+- name: "Create group spark"
+  group:
+    name: "spark"
+    state: present
+
+- name: "Add user spark"
+  user:
+    name: "spark"
+    group: "spark"
+
+- name: "Check if spark tar exists"
+  stat: path={{ spark.landing_zone }}/{{ spark.archived_file }}
+  register: spark_tar_exists
+
+- name: "Download spark tar to {{ spark.landing_zone }}"
+  get_url:
+    url: "{{ spark.url }}"
+    dest: "{{ spark.landing_zone }}"
+  when: not spark_tar_exists.stat.exists
+
+- name: "Extract spark tar to {{ spark.landing_zone }}"
+  unarchive:
+    src: "{{ spark.landing_zone }}/{{ spark.archived_file }}"
+    dest: "{{ spark.landing_zone }}"
+    remote_src: yes
+    owner: spark
+    group: spark
+
+- name: "Delete spark tar from {{ spark.landing_zone }}"
+  file:
+    path: "{{ spark.landing_zone }}/{{ spark.archived_file }}"
+    state: absent
+
+- name: Create spark log directory
+  file:
+    path: "{{ spark.apps_log_path }}"
+    state: directory
+    mode: "0755"
+    owner: spark
+    group: spark
+    recurse: yes
+
+- name: Create spark-env.sh
+  template:
+    src: spark-env.sh.j2
+    dest: "{{ spark.landing_zone }}/{{ spark.spark_home }}/conf/spark-env.sh"
+    owner: spark
+    group: spark
+
+- name: Create spark-defaults.conf
+  template:
+    src: spark-defaults.conf.j2
+    dest: "{{ spark.landing_zone }}/{{ spark.spark_home }}/conf/spark-defaults.conf"
+    owner: spark
+    group: spark

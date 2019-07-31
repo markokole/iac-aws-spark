@@ -1,0 +1,19 @@
+---
+- hosts: all
+  #gather_facts: no
+  become: true
+  roles:
+    - java
+    - spark
+
+- hosts: spark_master
+  #gather_facts: no
+  become: true
+  roles:
+    - start_spark_master
+
+- hosts: spark_worker
+  #gather_facts: no
+  become: true
+  roles:
+    - start_spark_workers

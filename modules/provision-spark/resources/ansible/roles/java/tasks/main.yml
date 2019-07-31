@@ -1,0 +1,7 @@
+- name: Install Java and nc packages
+  yum:
+    name: "{{ packages }}"
+  vars:
+    packages:
+    - "{{ java.yum_package }}"
+    - nc
