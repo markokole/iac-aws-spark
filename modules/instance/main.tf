@@ -8,6 +8,7 @@ locals {
   #app
   region               = "${data.consul_keys.app.var.region}"
   cidr_blocks          = "${data.consul_keys.app.var.cidr_blocks}"
+  ami                  = "${data.consul_keys.app.var.ami}"
 
   #aws
   vpc_id               = "${data.consul_keys.aws.var.vpc_id}"
@@ -17,7 +18,7 @@ locals {
 
   # spark
   #ami                  = "ami-0eb0892f46a18e1de"
-  ami                  = "${data.consul_keys.spark.var.ami}"
+  //ami                  = "${data.consul_keys.spark.var.ami}"
   no_workers           = "${data.consul_keys.spark.var.no_workers}" # number of workers in the cluster
   no_instances         = "${local.no_workers + 1}" # number of all nodes in the cluster
   instance_type_master = "${data.consul_keys.spark.var.instance_type_master}"
