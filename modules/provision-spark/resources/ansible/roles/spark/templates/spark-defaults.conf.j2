@@ -1,7 +1,9 @@
 spark.history.fs.logDirectory file:///var/log/spark/apps
-spark.eventLog.dir file:///var/log/spark/apps
-spark.eventLog.enabled true
-spark.master spark://{{ spark_master_name }}:7077
-spark.hadoop.fs.s3a.impl org.apache.hadoop.fs.s3native.NativeS3FileSystem
-#spark.hadoop.fs.s3a.awsAccessKeyId access_key
-#spark.hadoop.fs.s3a.awsSecretAccessKey secret_access_key
+spark.eventLog.dir            file:///var/log/spark/apps
+spark.eventLog.enabled        true
+spark.master                  spark://{{ spark_master_name }}:7077
+spark.hadoop.fs.s3a.impl      org.apache.hadoop.fs.s3a.S3AFileSystem
+spark.driver.extraClassPath   /usr/spark-s3-jars/aws-java-sdk-1.7.4.jar:/usr/spark-s3-jars/hadoop-aws-2.7.3.jar
+spark.executor.extraClassPath /usr/spark-s3-jars/aws-java-sdk-1.7.4.jar:/usr/spark-s3-jars/hadoop-aws-2.7.3.jar
+spark.hadoop.fs.s3a.access.key {{ lookup('env', 'AWS_ACCESS_KEY_ID') }}
+spark.hadoop.fs.s3a.secret.key {{ lookup('env', 'AWS_SECRET_ACCESS_KEY') }}

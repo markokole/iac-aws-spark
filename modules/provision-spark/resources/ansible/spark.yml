@@ -3,7 +3,7 @@
   #gather_facts: no
   become: true
   roles:
-    - java
+    - prereq
     - spark
 
 - hosts: spark_master
@@ -17,3 +17,9 @@
   become: true
   roles:
     - start_spark_workers
+
+- hosts: spark_master
+  #gather_facts: no
+  become: true
+  roles:
+    - execute_on_spark

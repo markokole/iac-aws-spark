@@ -1,11 +1,11 @@
-- name: Start Spark Master
+- name: Install Spark Master Service
   template:
     src: spark-master.service.j2
     dest: /etc/systemd/system/spark-master.service
     mode: 755
     force: yes
 
-- name: Start Spark History Server
+- name: Install Spark History Server Service
   template:
     src: sparkhs.service.j2
     dest: /etc/systemd/system/sparkhs.service

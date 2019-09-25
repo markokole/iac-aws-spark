@@ -1,6 +1,6 @@
 # Apache Spark on AWS
 
-**Philosophy:** Write your code on your local machine, scale it out in the cloud when you want to either use the whole dataset or run 10.000.000 epochs in your Neural Network. 
+**Philosophy:** Write your code on your local machine, scale it out in the cloud when you want to either use the whole dataset or run 10.000.000 epochs in your Neural Network.
 The cluster is provisioned, data processed and stored, and the cluster is destroyed. Minimal cost, maximal usage. Everything is automized.
 
 What is [Apache Spark?](https://spark.apache.org/)

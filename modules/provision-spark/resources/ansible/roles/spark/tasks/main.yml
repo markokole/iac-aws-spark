@@ -15,27 +15,27 @@
 - name: "Download spark tar to {{ spark.landing_zone }}"
   get_url:
     url: "{{ spark.url }}"
-    dest: "{{ spark.landing_zone }}"
+    dest: "/tmp"
   when: not spark_tar_exists.stat.exists
 
 - name: "Extract spark tar to {{ spark.landing_zone }}"
   unarchive:
-    src: "{{ spark.landing_zone }}/{{ spark.archived_file }}"
+    src: "/tmp/{{ spark.archived_file }}"
     dest: "{{ spark.landing_zone }}"
     remote_src: yes
     owner: spark
     group: spark
 
-- name: "Delete spark tar from {{ spark.landing_zone }}"
-  file:
-    path: "{{ spark.landing_zone }}/{{ spark.archived_file }}"
-    state: absent
+#- name: "Delete spark tar from {{ spark.landing_zone }}"
+#  file:
+#    path: "{{ spark.landing_zone }}/{{ spark.archived_file }}"
+#    state: absent
 
 - name: Create spark log directory
   file:
     path: "{{ spark.apps_log_path }}"
     state: directory
-    mode: "0755"
+    mode: "0777"
     owner: spark
     group: spark
     recurse: yes
@@ -53,3 +53,21 @@
     dest: "{{ spark.landing_zone }}/{{ spark.spark_home }}/conf/spark-defaults.conf"
     owner: spark
     group: spark
+
+- name: Create s3 jars directory
+  file:
+    path: "/usr/spark-s3-jars"
+    state: directory
+    mode: "0777"
+    owner: spark
+    group: spark
+
+- name: Download s3 jars
+  get_url:
+    url: "{{ item }}"
+    dest: /usr/spark-s3-jars
+    mode: '0755'
+  with_items:
+  - http://central.maven.org/maven2/com/amazonaws/aws-java-sdk/1.7.4/aws-java-sdk-1.7.4.jar
+  - http://central.maven.org/maven2/org/apache/hadoop/hadoop-aws/2.7.3/hadoop-aws-2.7.3.jar
+  

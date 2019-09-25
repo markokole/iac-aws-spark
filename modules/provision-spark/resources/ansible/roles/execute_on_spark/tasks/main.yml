@@ -1,0 +1,11 @@
+- git:
+    repo: "{{ git_repo }}"
+    dest: "{{ git_dest }}"
+
+- name: "Python: job"
+  command: sh {{ spark.landing_zone }}/{{ spark.spark_home }}/bin/spark-submit --master spark://{{ spark_master_name }}:7077 {{ git_dest }}/{{ exec_path }}
+  #when: class_name == ""
+
+#- name: "Scala: spark"
+#  command: sh {{ spark.landing_zone }}/{{ spark.spark_home }}/bin/spark-submit --master {{ spark_master_name }}:7077 --class {{ class_name }} {{ git_dest }}/{{ exec_path }} {{ spark_job_args }}
+#  when: class_name != ""
