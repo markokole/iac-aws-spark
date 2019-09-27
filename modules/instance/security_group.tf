@@ -7,7 +7,7 @@ resource "aws_security_group" "sg_spark_terraform" {
     from_port = 0
     to_port   = 0
     protocol  = "-1"
-    cidr_blocks = local.cidr_blocks
+    //cidr_blocks = local.cidr_blocks
     self        = "true"
   }
 
@@ -53,4 +53,4 @@ resource "aws_security_group" "sg_spark_terraform" {
     protocol    = "-1"
     cidr_blocks = ["0.0.0.0/0"]
   }
-}
+} 

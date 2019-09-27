@@ -18,13 +18,6 @@ locals {
   git_repo       = data.consul_keys.spark.var.git_repo
   git_dest       = data.consul_keys.spark.var.git_dest
   class_name     = data.consul_keys.spark.var.class_name
-
-  //spark_url              = "https://archive.apache.org/dist/spark/spark-2.4.0/spark-2.4.0-bin-hadoop2.7.tgz"
-  //spark_dir              =  "/usr/spark/"
-  //spark_version          = "spark-2.4.3"
-
-  access_key        = data.consul_keys.app.var.access_key
-  secret_access_key = data.consul_keys.app.var.secret_access_key
 }
 
 resource "null_resource" "execute_spark" {
@@ -32,7 +25,7 @@ resource "null_resource" "execute_spark" {
 
   provisioner "local-exec" {
     command = <<EOF
-      sleep 10
+      sleep 20
 EOF
 
   }

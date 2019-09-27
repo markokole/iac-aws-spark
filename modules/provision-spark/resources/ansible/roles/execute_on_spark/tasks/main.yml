@@ -4,8 +4,11 @@
 
 - name: "Python: job"
   command: sh {{ spark.landing_zone }}/{{ spark.spark_home }}/bin/spark-submit --master spark://{{ spark_master_name }}:7077 {{ git_dest }}/{{ exec_path }}
-  #when: class_name == ""
+  become: yes
+  become_user: spark
 
 #- name: "Scala: spark"
 #  command: sh {{ spark.landing_zone }}/{{ spark.spark_home }}/bin/spark-submit --master {{ spark_master_name }}:7077 --class {{ class_name }} {{ git_dest }}/{{ exec_path }} {{ spark_job_args }}
+#  become: yes
+#  become_user: spark
 #  when: class_name != ""

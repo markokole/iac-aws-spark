@@ -21,6 +21,7 @@ variable "datacenter" {
   default = "dc1"
 }
 
+/*
 data "consul_keys" "app" {
   key {
     name    = "access_key"
@@ -34,6 +35,7 @@ data "consul_keys" "app" {
     default = ""
   }
 }
+*/
 
 data "consul_keys" "spark" {
   key {

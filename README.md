@@ -1,22 +1,20 @@
 # Apache Spark on AWS
 
 **Philosophy:** Write your code on your local machine, scale it out in the cloud when you want to either use the whole dataset or run 10.000.000 epochs in your Neural Network.
-The cluster is provisioned, data processed and stored, and the cluster is destroyed. Minimal cost, maximal usage. Everything is automized.
+The cluster is provisioned, data processed and stored to an external storage, and the cluster is destroyed. Minimal cost, maximal usage. Everything is automated.
 
 What is [Apache Spark?](https://spark.apache.org/)
 
 **Spark** cluster is provisioned using **Hashistack** - **Terraform** and **Consul** - and **Ansible**. The cluster is provisioned on **AWS**, work environment is **Docker** on Windows.
 
-The idea is to automate the Spark cluster provision, clone the code from **GitHub**, run it on data from an external source (for example S3). Once the data processing is done, results are saved to an external storage and the cluster is destroyed.
+The idea is to automate the Spark cluster provision, clone the code from **GitHub** and run it on data from an external source (for example S3). Once the data processing is done, results are saved to an external storage and the cluster is destroyed.
 
 ![alt text](https://github.com/markokole/iac-aws-spark/blob/master/files/iac.JPG "Infrastructure as Code")
 
 1. The **Virtual Private Cloud** is provisioned using **Terraform**. VPC's parameters are stored in Consul. This is a long live provision and serves multiple cluster provisions.
-2. Data is loaded into S3. This is optional, depending on the data storage solution. Hadoop/Hive on top of S3 is also an option.
-If S3 is used, the following lines should be executed in Docker to add keys to Consul:
-`consul kv put test/master/aws/access_key <ACCESS_KEY>`
-`consul kv put test/master/aws/secret_access_key <SECRET_ACCESS_KEY>`
-Keys used are keys that have access to the bucket the application is accessing.
+2. Data is loaded into S3. This is optional, depending on the data storage solution. Hadoop/Hive on top of S3 is also an option. A NoSql is also an option. Data Scientist inside the code handles data connection.
+If S3 is used, make sure you have access to the S3 storage. More on this, check out this [post](https://markobigdata.com/2019/09/27/automating-access-from-apache-spark-to-s3-with-ansible/).
+
 3. Code (or JAR application) to be run in Spark is put in a repository in GitHub. More here [Data Science examples](#Data Science examples)
 4. Cluster provisioning creates the cluster, clones the repository, runs the code which points to the data storage (S3 bucket for example).
 5. Data is processed and results are saved to an external storage (S3).
@@ -30,21 +28,22 @@ Keys used are keys that have access to the bucket the application is accessing.
 
 ### VPC on AWS
 
-The GitHub project [Provision VPC on AWS](https://github.com/markokole/iac-aws-vpc) sets up the **Virtual Private Cloud** in AWS. One can first build a **Docker** container on Windows to prepare the development environment and local Consul server where the configuration parameters are stored.
+The GitHub project [Provision VPC on AWS](https://github.com/markokole/iac-aws-vpc) sets up the **Virtual Private Cloud** in AWS. One can first build a **Docker** container on Windows to prepare the development environment and Consul agent where the configuration parameters are stored.
 The documentation in that project will help you create the Docker container and prepare the development environment.
 
 ### Configuration to Consul
 
-The provisioning of the cluster uses Consul to fetch the parameters for provisioned cluster. *Externalization of parameters is still work in progress*. In the [configuration project](https://github.com/markokole/iac-consul-config) *yaml* files are stored and these files are used to feed the local Consul in the Docker. At runtime, Terraform connects to the local Consul and populates the variables pointing to Consul.
+The provisioning of the cluster uses Consul to fetch the parameters for provisioned cluster. *Externalization of parameters is still work in progress*. In the [configuration project](https://github.com/markokole/iac-consul-config) *yaml* files are stored and these files are used to feed the global Consul in AWS. At runtime, Terraform connects to the global Consul with a local Consul agent.
 
 The YAML file for the Spark cluster configuration is the [spark.yml](https://github.com/markokole/iac-consul-config/blob/master/spark.yml).
 The GitHub repository with the code has to be entered in the configuration. This code is cloned to the Spark client (which is also the master). *If you plan to do some demanding work locally (for example with pandas) choose an instance with more resources.*
-The arguments taken by the python script are a semi-colon separated script which the user should parse in the code.
+
+The python script takes no arguments, they all have to be written in the code - they are Data SCientist's responsibility.
 The above mentioned spark.yml file has a block with description of all parameters used.
 
 ### Data Science examples
 
-This [project](https://github.com/markokole/ds-code-for-ias) holds some **pyspark** and **scala** examples to test the automatization - the provisioning process, once **Spark** cluster is established, the GitHub repository is cloned and the code is run. Input datasets are in S3 and are given as input parameters in the spark submit command.
+This [project](https://github.com/markokole/ds-code-for-ias) holds some **pyspark** and **scala** examples to test the automatization - the provisioning process, once **Spark** cluster is established, the GitHub repository is cloned to the Spark Master and the code is run.
 
 ## Generalization
 
