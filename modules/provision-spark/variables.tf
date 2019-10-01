@@ -21,22 +21,6 @@ variable "datacenter" {
   default = "dc1"
 }
 
-/*
-data "consul_keys" "app" {
-  key {
-    name    = "access_key"
-    path    = "${var.path_in_consul}/access_key"
-    default = ""
-  }
-
-  key {
-    name    = "secret_access_key"
-    path    = "${var.path_in_consul}/secret_access_key"
-    default = ""
-  }
-}
-*/
-
 data "consul_keys" "spark" {
   key {
     name = "no_workers"
