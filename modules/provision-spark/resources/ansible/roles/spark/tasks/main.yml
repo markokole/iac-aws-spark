@@ -1,20 +1,10 @@
-- name: "Create group spark"
-  group:
-    name: "spark"
-    state: present
-
-- name: "Add user spark"
-  user:
-    name: "spark"
-    group: "spark"
-
 - name: "Check if spark tar exists"
   stat: path={{ spark.landing_zone }}/{{ spark.archived_file }}
   register: spark_tar_exists
 
 - name: "Download spark tar to {{ spark.landing_zone }}"
   get_url:
-    url: "{{ spark.url }}"
+    url: "{{ spark_url }}"
     dest: "/tmp"
   when: not spark_tar_exists.stat.exists
 
