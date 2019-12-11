@@ -47,5 +47,10 @@ data "consul_keys" "spark" {
     path    = "${var.path_in_consul_spark}/${var.cluster_type}/class_name"
     default = ""
   }
+  key {
+    name    = "spark_url"
+    path    = "${var.path_in_consul_spark}/${var.cluster_type}/spark_url"
+    default = ""
+  }
 }
 

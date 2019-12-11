@@ -18,6 +18,7 @@ locals {
   git_repo       = data.consul_keys.spark.var.git_repo
   git_dest       = data.consul_keys.spark.var.git_dest
   class_name     = data.consul_keys.spark.var.class_name
+  spark_url      = data.consul_keys.spark.var.spark_url
 }
 
 resource "null_resource" "execute_spark" {
@@ -39,7 +40,8 @@ ansible-playbook --inventory=${local.workdir}/ansible-hosts \
                  --extra-vars spark_master_name=${local.spark_master_name} \
                  --extra-vars git_repo=${local.git_repo} \
                  --extra-vars git_dest=${local.git_dest} \
-                 --extra-vars exec_path=${local.exec_path}
+                 --extra-vars exec_path=${local.exec_path} \
+                 --extra-vars spark_url=${local.spark_url}
 EOF
 
 
