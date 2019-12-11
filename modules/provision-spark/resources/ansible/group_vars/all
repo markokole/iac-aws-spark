@@ -3,9 +3,7 @@ java:
   yum_package: "java-1.8.0-openjdk"
 
 spark:
-  #url: "https://archive.apache.org/dist/spark/spark-2.4.3/spark-2.4.3-bin-hadoop2.7.tgz"
-  url: "http://apache.uib.no/spark/spark-2.4.4/spark-2.4.4-bin-hadoop2.7.tgz"
   landing_zone: "/usr"
-  archived_file: "spark-2.4.4-bin-hadoop2.7.tgz"
-  spark_home: "spark-2.4.4-bin-hadoop2.7"
+  archived_file: "{{ spark_url.split('/')[-1] }}"
+  spark_home: "{{ (spark_url.split('/')[-1]) | replace('.tgz', '') }}"
   apps_log_path: "/var/log/spark/apps"
