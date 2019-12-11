@@ -1,3 +1,13 @@
+- name: "Create group spark"
+  group:
+    name: "spark"
+    state: present
+
+- name: "Add user spark"
+  user:
+    name: "spark"
+    group: "spark"
+
 - name: Install Java and other packages
   yum:
     name: "{{ packages }}"
@@ -6,17 +16,19 @@
     - "{{ java.yum_package }}"
     - nc
     - git
+    - python3-pip
 
-- name: "Check if anaconda install script exists"
-  stat: path=/tmp/Anaconda3-2019.07-Linux-x86_64.sh
-  register: anaconda_sh_exists
+- name: Pip install virtualenv
+  pip:
+    name: virtualenv
+    executable: pip3
 
-- name: Download Anaconda
-  get_url:
-    url: https://repo.anaconda.com/archive/Anaconda3-2019.07-Linux-x86_64.sh
-    dest: /tmp
-    mode: '0755'
-  when: not anaconda_sh_exists.stat.exists
+- name: Create virtualenv
+  shell: /usr/local/bin/virtualenv /home/spark/sparkenv
+  become: true
+  become_user: spark
 
-- name: Install Anaconda
-  command: /tmp/Anaconda3-2019.07-Linux-x86_64.sh -b -u -p /usr/anaconda3
+- name: Pip install in virtualenv
+  shell: /home/spark/sparkenv/bin/pip install numpy pandas
+  become: yes
+  become_user: spark
