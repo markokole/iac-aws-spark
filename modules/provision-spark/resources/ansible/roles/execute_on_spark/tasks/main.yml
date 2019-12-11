@@ -1,6 +1,8 @@
 - git:
     repo: "{{ git_repo }}"
     dest: "{{ git_dest }}"
+  become: yes
+  become_user: spark  
 
 - name: "Python: job"
   command: sh {{ spark.landing_zone }}/{{ spark.spark_home }}/bin/spark-submit --master spark://{{ spark_master_name }}:7077 {{ git_dest }}/{{ exec_path }}
